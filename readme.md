@@ -63,4 +63,4 @@ Se você tem o Docker instalado, basta um comando:
     ```
 
 ---
-Desenvolvido por [Seu Nome](https://github.com/SEU-USUARIO)
+Desenvolvido por Gabriel de Souza
