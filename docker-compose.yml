@@ -1,0 +1,11 @@
+services:
+  chatbot:
+    build: .
+    container_name: chatbot-gabriel
+    ports:
+      - "8000:8000"
+      - "8501:8501"
+    env_file:
+      - .env
+   
+    restart: always
