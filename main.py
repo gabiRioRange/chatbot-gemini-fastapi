@@ -108,17 +108,6 @@ async def upload_pdf(file: UploadFile = File(...)):
         return {"status": "Sucesso", "chunks": len(chunks_data)}
     
     return {"erro": "Falha ao processar"}
-    # 2. Gera Vetores
-    textos_apenas = [c["text"] for c in chunks_data]
-    embeddings = gerar_embeddings_em_lote(textos_apenas)
-    
-    # 3. Cria Índice
-    if embeddings:
-        dim = len(embeddings[0])
-        vector_index = faiss.IndexFlatL2(dim)
-        vector_index.add(np.array(embeddings))
-        return {"status": "Sucesso", "chunks": len(chunks_data)}
-    return {"erro": "Falha ao processar"}
 
 @app.post("/chat")
 async def conversar(req: ChatRequest, db: Session = Depends(get_db)):
@@ -136,7 +125,6 @@ async def conversar(req: ChatRequest, db: Session = Depends(get_db)):
     if vector_index and chunks_data:
         query_emb = genai.embed_content(model="models/text-embedding-004", content=entrada, task_type="retrieval_query")["embedding"]
         D, I = vector_index.search(np.array([query_emb]), k=3) # Top 3 trechos
-        
         for idx in I[0]:
             if idx < len(chunks_data):
                 item = chunks_data[idx]
